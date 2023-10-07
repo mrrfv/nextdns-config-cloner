@@ -3,6 +3,8 @@ import fetch from "node-fetch";
 // Load configuration
 import config from "./.config.json" assert { type: "json" };
 
+console.log(`Configuration loaded: ${config.child_accounts.length} child accounts`)
+
 // Function to get the parent account's configuration
 async function getParentConfig() {
   const res = await fetch(
@@ -13,7 +15,9 @@ async function getParentConfig() {
       },
     }
   );
-  const { data } = await res.json();
+  const json = await res.json();
+  if (process.env.DEBUG) console.log(json);
+  const data = json.data;
 
   // Remove profile-specific settings from the parent account's configuration
   // Note: this doesn't remove the name
