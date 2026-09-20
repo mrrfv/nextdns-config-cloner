@@ -1,0 +1,11 @@
+{
+  "parent_account_api_key": "YOUR_PARENT_ACCOUNT_API_KEY",
+  "parent_account_config_id": "YOUR_PARENT_ACCOUNT_CONFIG_ID",
+  "child_accounts": [
+    {
+      "name": "Child Account 1",
+      "api_key": "CHILD_ACCOUNT_1_API_KEY",
+      "config_id": "CHILD_ACCOUNT_1_CONFIG_ID"
+    }
+  ]
+}
