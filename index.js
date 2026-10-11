@@ -17,6 +17,14 @@ async function getParentConfig() {
   );
   const json = await res.json();
   if (process.env.DEBUG) console.log(json);
+  if (!res.ok || !json.data) {
+    console.error(`\n[ERROR] Failed to fetch parent configuration (Status: ${res.status}):`);
+    console.error(JSON.stringify(json, null, 2));
+    if (config.parent_account_api_key.startsWith("YOUR_")) {
+      console.error("\nPlease edit .config.json and replace the placeholder API keys and Config IDs with your real NextDNS details.\n");
+    }
+    process.exit(1);
+  }
   const data = json.data;
 
   // Remove profile-specific settings from the parent account's configuration
@@ -54,16 +62,23 @@ async function getParentConfig() {
 
 // Function to set the configuration of a child account
 async function setChildConfig(apiKey, config_id, config) {
-  const res = await fetch(`https://api.nextdns.io/profiles/${config_id}`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Api-Key": apiKey,
-    },
-    body: JSON.stringify(config),
-  });
-  if (process.env.DEBUG) console.log(await res.text());
-  return res.ok;
+  let allOk = true;
+  for (const [key, value] of Object.entries(config)) {
+    const res = await fetch(`https://api.nextdns.io/profiles/${config_id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Api-Key": apiKey,
+      },
+      body: JSON.stringify({ [key]: value }),
+    });
+    if (process.env.DEBUG) console.log(`PATCH ${key} status: ${res.status}`);
+    if (!res.ok) {
+      console.error(`Failed to update section '${key}' for profile ${config_id} (Status: ${res.status})`);
+      allOk = false;
+    }
+  }
+  return allOk;
 }
 
 // Function to get the rewrites of an account
