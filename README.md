@@ -6,7 +6,7 @@ This script replaces the profile configuration of multiple child NextDNS account
 
 ### Prerequisites
 
-- Node.js, preferably the latest version as experimental features are used. Tested on v20.1.0.
+- Node.js 18.20+ / 20.10+ (uses JSON import attributes). Tested on v24.19.0.
 - NextDNS accounts with profiles already created. The script does not create profiles, it only replaces their configuration.
 
 ### Code & dependencies
