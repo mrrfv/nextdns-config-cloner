@@ -1,7 +1,7 @@
 import fetch from "node-fetch";
 
 // Load configuration
-import config from "./.config.json" assert { type: "json" };
+import config from "./.config.json" with { type: "json" };
 
 console.log(`Configuration loaded: ${config.child_accounts.length} child accounts`)
 
@@ -28,8 +28,10 @@ async function getParentConfig() {
   const data = json.data;
 
   // Remove profile-specific settings from the parent account's configuration
-  // Note: this doesn't remove the name
+  // Note: we also remove the name, otherwise this script renames every child
+  // profile to the parent's name when it PATCHes the config below.
   delete data.id;
+  delete data.name;
   delete data.fingerprint;
   delete data.setup;
 
